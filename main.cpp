@@ -7,30 +7,34 @@
 
 using namespace std;
 
-void algo1(pair<int, int> *pairs, int size)
+void algo1(pair<int, int> *pairs, int sortedSize)
 {
     // 2  5  9  12 16 40 42 43 46 50 --- pairs.first
     // 1  2  3  4  5  6  7  8  9  10 --- pairs.second
     // 1  1  2  2  3  3  4  4  5  5  --- frets (GRYBO)
     
-    for (int i = 0; i < size; ++i) {
-        pairs[i].second = pairs[i].second * 5 / size;
+    for (int i = 0; i < sortedSize; ++i) {
+        double res = (double) pairs[i].second * 5 / sortedSize;
+        pairs[i].second = (int) ceil(res);
+        
         //std::cout << pairs[i].first << " " << pairs[i].second << endl;
     }    
 }
 
-void algo2(pair<int, int> *pairs, int size)
+void algo2(pair<int, int> *pairs, int sortedSize)
 {
     // 2  5  9  12 16 40 42 43 46 50 --- pairs.first
     // 1  2  3  4  5  6  7  8  9  10 --- pairs.second
     // 1  2  3  4  5  1  2  3  4  5  --- frets (GRYBO)
     
-    for (int i = 0; i < size; ++i) {
+    for (int i = 0; i < sortedSize; ++i) {
         pairs[i].second = pairs[i].second % 5;
         if (pairs[i].second == 0)
         {
             pairs[i].second = 5;
         }
+        
+        //std::cout << pairs[i].first << " " << pairs[i].second << endl;
     }    
 }
 
@@ -45,7 +49,7 @@ void printResults(int* ints, int size)
     std::cout << endl;
     std::cout << "RESULTS" << endl;
     
-    // reverse array to print last note first and make it look like a fretboard    
+    // Reverse array to print last note first and make it look like a fretboard (first note at the bottom)   
     for (int i = size - 1; i >= 0; --i) { 
         int note = ints[i];
         
@@ -75,42 +79,51 @@ void calculate(int* ints, int size)
     }
     
     // Sort noteArray
-    // TODO remove duplicates
     sort(ints, ints + size);
     
-    // Reduce (= make pairs)
-    pair<int, int> pairs[size];
+    // Remove duplicates in the sorted array
+    int sortedSize = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (i == size-1 || ints[i] != ints[i+1])
+        {
+            ints[sortedSize] = ints[i];
+            sortedSize++;
+        }
+    }            
     
-    for (int i = 0; i < size; ++i) {
+    // Reduce (= make pairs)
+    pair<int, int> pairs[sortedSize];
+    
+    for (int i = 0; i < sortedSize; ++i) {
         pairs[i] = make_pair(ints[i], i + 1);
         
         //std::cout << pairs[i].first << " " << pairs[i].second << endl;
     }
     
     // Compute algo
-    algo2(pairs, size);
+    algo1(pairs, sortedSize);
     
     // Apply algo result to noteArray
     for(int i = 0; i < size; ++i) {
-        for(int j = 0; j < size; ++j) {
+        for(int j = 0; j < sortedSize; ++j) {
             
             if (order[i] == pairs[j].first) {
-                //std::cout << ints[i] << endl;
+                //std::cout << order[i] << " " << pairs[j].second << endl;
                 order[i] = pairs[j].second;
-                //std::cout << ints[i] << endl;
                 break;
             }
         }
     }
     
-    printResults(order, size);    
+    printResults(order, size);
 }
 
 void test1()
 {
     std::cout << "test1\n";
-    int myarray[] = { 2, 16, 77, 34, 50 };
-    calculate(myarray, 5);
+    int myarray[] = { 2, 16, 77, 34, 50, 34, 2 };
+    calculate(myarray, 7);
 }
 
 void test2()
@@ -120,8 +133,17 @@ void test2()
     calculate(myarray, 4);
 }
 
+void test3()
+{
+    std::cout << "test3\n";
+    int myarray[] = { 2, 16, 77, 34, 50, 34, 2, 3 };
+    calculate(myarray, 8);
+}
+
 int main()
 {
     std::cout << "Hello!\n";
     test1();
+    test2();
+    test3();
 }
