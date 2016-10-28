@@ -7,6 +7,8 @@
 
 using namespace std;
 
+int algoNumber = 1;
+
 void algo1(pair<int, int> *pairs, int sortedSize)
 {
     // 2  5  9  12 16 40 42 43 46 50 --- pairs.first
@@ -89,7 +91,18 @@ void calculate(int* ints, int size)
     }
     
     // Compute algo
-    algo1(pairs, sortedSize);
+    switch (algoNumber) {
+        case 1:
+            algo1(pairs, sortedSize);
+            break;
+        case 2:
+            algo2(pairs, sortedSize);
+            break;
+        default:
+            std::cout << "Wrong algo number, by default 1" << endl;
+            algo1(pairs, sortedSize);
+            break;        
+    }    
     
     // Apply algo result to noteArray
     int frets[sortedSize];
@@ -110,28 +123,37 @@ void calculate(int* ints, int size)
 
 void test1()
 {
-    std::cout << "test1\n";
     int myarray[] = { 2, 16, 77, 34, 50, 34, 2 };
-    calculate(myarray, 7);
+    
+    std::cout << "test1" << endl;
+    int arraySize = sizeof(myarray) / sizeof(myarray[0]);
+    
+    calculate(myarray, arraySize);
 }
 
 void test2()
 {
-    std::cout << "test2\n";
     int myarray[] = { 15, 4, 30, 20 };
-    calculate(myarray, 4);
+    
+    std::cout << "test2" << endl;
+    int arraySize = sizeof(myarray) / sizeof(myarray[0]);
+    
+    calculate(myarray, arraySize);
 }
 
 void test3()
 {
-    std::cout << "test3\n";
-    int myarray[] = { 2, 16, 77, 34, 50, 34, 2, 3 };
-    calculate(myarray, 8);
+    int myarray[] = { 2, 16, 77, 34, 50, 34, 2, 3, 22 };
+    
+    std::cout << "test3" << endl;
+    int arraySize = sizeof(myarray) / sizeof(myarray[0]);
+    
+    calculate(myarray, arraySize);
 }
 
 int main()
 {
-    std::cout << "Hello!\n";
+    std::cout << "Hello! Let's test algo number " << algoNumber << endl;
     test1();
     test2();
     test3();
