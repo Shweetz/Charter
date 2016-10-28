@@ -38,20 +38,13 @@ void algo2(pair<int, int> *pairs, int sortedSize)
     }    
 }
 
-void printResults(int* ints, int size)
+void printResults(int* order, int* frets, int size)
 {
-    std::cout << "FRETS" << endl;
-    
-    for (int i = 0; i < size; ++i) {
-        std::cout << ints[i] << " ";
-    }    
-    
-    std::cout << endl;
-    std::cout << "RESULTS" << endl;
-    
     // Reverse array to print last note first and make it look like a fretboard (first note at the bottom)   
     for (int i = size - 1; i >= 0; --i) { 
-        int note = ints[i];
+        std::cout << order[i] << "\t";
+        
+        int note = frets[i];
         
         for (int j = 1; j < 6; ++j) {
             if (j == note) {
@@ -66,12 +59,6 @@ void printResults(int* ints, int size)
 
 void calculate(int* ints, int size)
 {
-    // Trace
-    for(int i = 0; i < size; ++i) {
-        std::cout << ints[i] << ' ';
-    }
-    std::cout << endl;
-    
     // Save noteArray
     int order[size];
     for(int i = 0; i < size; ++i) {
@@ -105,18 +92,20 @@ void calculate(int* ints, int size)
     algo1(pairs, sortedSize);
     
     // Apply algo result to noteArray
+    int frets[sortedSize];
+    
     for(int i = 0; i < size; ++i) {
         for(int j = 0; j < sortedSize; ++j) {
             
             if (order[i] == pairs[j].first) {
                 //std::cout << order[i] << " " << pairs[j].second << endl;
-                order[i] = pairs[j].second;
+                frets[i] = pairs[j].second;
                 break;
             }
         }
     }
     
-    printResults(order, size);
+    printResults(order, frets, size);
 }
 
 void test1()
